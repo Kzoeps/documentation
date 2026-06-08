@@ -7,10 +7,10 @@ description: Overview of the Certified-operated CGS (Certified Group Service) in
 
 Certified operates several [CGS](/architecture/certified-group-service) instances across production, staging, and test environments. This page explains what each one is for and which you should use in which scenario.
 
-CGS is also **self-hostable per operator** — you don't have to use a Certified-operated instance. Anyone can run their own CGS and point it at whichever PDS backs the group. The guidance below applies when you specifically want to use a Certified-hosted group service (for example, the "create a group" flow on [`certified.app`](https://certified.app)).
+CGS is also **self-hostable per operator** — you don't have to use a Certified-operated instance. Anyone can run their own CGS against any AT Protocol PDS. The `GROUP_PDS_URL` setting configures where newly *registered* groups get their accounts; *imported* groups keep whatever PDS already hosts them, so one instance can span multiple PDSs (see [Group lifecycle](/architecture/certified-group-service#group-lifecycle)). The guidance below applies when you specifically want to use a Certified-hosted group service (for example, the "create a group" flow on [`certified.app`](https://certified.app)).
 
 {% callout type="note" %}
-Each CGS instance is bound to a single backing PDS (via `GROUP_PDS_URL`), and every group it registers lives on that PDS. Groups created through the hosted CGS currently land on a **test PDS**, not production — the same test-instance caveats apply as for any other `*.test.certified.app` PDS. See [Certified PDSs](/reference/certified-pdss) for details.
+Groups *registered* through the hosted CGS currently get their PDS accounts created on a **test PDS**, not production — the same test-instance caveats apply as for any other `*.test.certified.app` PDS. See [Certified PDSs](/reference/certified-pdss) for details.
 {% /callout %}
 
 ## Quick reference
@@ -29,7 +29,7 @@ Each CGS instance is bound to a single backing PDS (via `GROUP_PDS_URL`), and ev
 
 `groups.certified.app` is the production CGS. It's the instance that production applications should point at when they want group-governed repositories with role-based access control.
 
-As with any CGS deployment, it proxies to a single backing PDS. By the nature of AT Protocol's decentralized approach, CGS is not a requirement for apps built on Hypercerts — it's the production group service to use when you specifically want co-governed repositories.
+By the nature of AT Protocol's decentralized approach, CGS is not a requirement for apps built on Hypercerts — it's the production group service to use when you specifically want co-governed repositories.
 
 ## Staging: `dev.groups.certified.app`
 
