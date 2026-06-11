@@ -5,6 +5,7 @@ import figure from './figure.markdoc';
 import cardLink from './card-link.markdoc';
 import cardGrid from './card-grid.markdoc';
 import heroBanner from './hero-banner.markdoc';
+import remoteDoc from './remote-doc.markdoc';
 
 export default {
   callout,
@@ -14,4 +15,5 @@ export default {
   'card-link': cardLink,
   'card-grid': cardGrid,
   'hero-banner': heroBanner,
+  'remote-doc': remoteDoc,
 };
