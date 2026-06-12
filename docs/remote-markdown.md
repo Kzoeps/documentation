@@ -50,7 +50,7 @@ A short unavailable-state fallback goes here. Keep it brief so the documentation
 `.github/workflows/docs-refresh.yml` runs hourly and through `workflow_dispatch`:
 
 1. Generate the current external-docs fingerprint.
-2. Download the deployed fingerprint from `DOCS_FINGERPRINT_URL`, defaulting to `https://docs.hypercerts.org/docs-fingerprint.json`.
+2. Download the deployed fingerprint from `DOCS_FINGERPRINT_URL`, defaulting to `https://documentation-zeta-weld.vercel.app/docs-fingerprint.json`.
 3. Compare only `combinedFingerprint`.
 4. If it changed, `POST` to the configured Vercel Deploy Hook.
 

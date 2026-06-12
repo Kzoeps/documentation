@@ -50,7 +50,7 @@ jobs:
 
       - name: Download deployed docs fingerprint
         env:
-          DOCS_FINGERPRINT_URL: ${{ vars.DOCS_FINGERPRINT_URL || 'https://docs.hypercerts.org/docs-fingerprint.json' }}
+          DOCS_FINGERPRINT_URL: ${{ vars.DOCS_FINGERPRINT_URL || 'https://documentation-zeta-weld.vercel.app/docs-fingerprint.json' }}
         run: |
           set +e
           http_code=$(curl -sS -L -w "%{http_code}" \
