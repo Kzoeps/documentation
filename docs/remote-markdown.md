@@ -50,7 +50,7 @@ A short unavailable-state fallback goes here. Keep it brief so the documentation
 `.github/workflows/docs-refresh.yml` runs hourly and through `workflow_dispatch`:
 
 1. Generate the current external-docs fingerprint.
-2. Download `https://docs.hypercerts.org/docs-fingerprint.json` from the deployed site.
+2. Download the deployed fingerprint from `DOCS_FINGERPRINT_URL`, defaulting to `https://docs.hypercerts.org/docs-fingerprint.json`.
 3. Compare only `combinedFingerprint`.
 4. If it changed, `POST` to the configured Vercel Deploy Hook.
 
@@ -61,6 +61,10 @@ Manual `workflow_dispatch` runs default to `dry_run: true`, which compares finge
 Required GitHub Actions secret:
 
 - `VERCEL_DEPLOY_HOOK_URL` — the Vercel Deploy Hook URL for the production docs branch.
+
+Optional GitHub Actions variable:
+
+- `DOCS_FINGERPRINT_URL` — the deployed site fingerprint URL. Forks and staging deployments should set this to their own Vercel URL, for example `https://your-test-docs.vercel.app/docs-fingerprint.json`.
 
 Optional GitHub Actions secret:
 
