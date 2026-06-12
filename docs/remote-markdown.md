@@ -72,7 +72,7 @@ Optional GitHub Actions secret:
 
 ## Constraints
 
-- Sources must be in `hypercerts-org` GitHub repositories.
+- Sources must be in approved GitHub owners: `hypercerts-org` or `gainforest`.
 - Registry ids must be lowercase, for example `epds` or `certified-group-service`.
 - A source needs `entrypoint` when `docsPath` points at a directory and a page renders it through `{% remote-doc %}`.
 - The current page renderer is browser-runtime fetching, not server-side rendering.

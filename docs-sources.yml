@@ -9,7 +9,7 @@ sources:
 
   - id: hyperindex-test
     title: Hyperindex test source
-    repo: hypercerts-org/hyperindex
+    repo: gainforest/hyperindex
     branch: skills-update
     docsPath: docs/hyperindex.md
     routeBase: /tools/hyperindex

@@ -16,7 +16,7 @@ import { HeroBanner } from './HeroBanner';
 import { CardGrid } from './CardGrid';
 import { MermaidDiagram } from './MermaidDiagram';
 
-const SOURCE_ORG = 'hypercerts-org';
+const ALLOWED_SOURCE_ORGS = ['hypercerts-org', 'gainforest'];
 const EXTERNAL_DOCS_MANIFEST_URL = '/external-docs.json';
 let externalDocsManifestPromise = null;
 const RemoteMarkdownContext = React.createContext(null);
@@ -26,17 +26,21 @@ const markdocConfig = {
   nodes: { fence, heading, link },
 };
 
+function isAllowedSourceOwner(owner) {
+  return ALLOWED_SOURCE_ORGS.includes(String(owner || '').toLowerCase());
+}
+
 /**
  * Convert an allowed GitHub Markdown URL into the raw URL used by the browser fetch.
- * Only hypercerts-org GitHub sources are allowed so docs pages cannot become an open proxy.
+ * Only approved GitHub owners are allowed so docs pages cannot become an open proxy.
  */
 function resolveGitHubMarkdownSource(source) {
   const url = new URL(source);
 
   if (url.hostname === 'github.com') {
     const [, owner, repo, marker, ref, ...fileParts] = url.pathname.split('/');
-    if (owner?.toLowerCase() !== SOURCE_ORG || marker !== 'blob' || !repo || !ref || fileParts.length === 0) {
-      throw new Error('Remote docs must use a hypercerts-org GitHub blob URL, for example https://github.com/hypercerts-org/ePDS/blob/main/docs/tutorial.md.');
+    if (!isAllowedSourceOwner(owner) || marker !== 'blob' || !repo || !ref || fileParts.length === 0) {
+      throw new Error(`Remote docs must use a GitHub blob URL under one of these owners: ${ALLOWED_SOURCE_ORGS.join(', ')}.`);
     }
 
     const filePath = fileParts.join('/');
@@ -52,8 +56,8 @@ function resolveGitHubMarkdownSource(source) {
 
   if (url.hostname === 'raw.githubusercontent.com') {
     const [, owner, repo, ref, ...fileParts] = url.pathname.split('/');
-    if (owner?.toLowerCase() !== SOURCE_ORG || !repo || !ref || fileParts.length === 0) {
-      throw new Error('Remote docs must use a raw.githubusercontent.com URL under hypercerts-org.');
+    if (!isAllowedSourceOwner(owner) || !repo || !ref || fileParts.length === 0) {
+      throw new Error(`Remote docs must use a raw.githubusercontent.com URL under one of these owners: ${ALLOWED_SOURCE_ORGS.join(', ')}.`);
     }
 
     const filePath = fileParts.join('/');
@@ -118,7 +122,7 @@ function resolveRegisteredMarkdownSource(source, manifest) {
   }
 
   const [owner, repo] = String(entry.repo || '').split('/');
-  if (owner?.toLowerCase() !== SOURCE_ORG || !repo || !entry.branch || !entry.filePath || !entry.rawUrl || !entry.sourceUrl) {
+  if (!isAllowedSourceOwner(owner) || !repo || !entry.branch || !entry.filePath || !entry.rawUrl || !entry.sourceUrl) {
     throw new Error(`External docs source "${id}" is incomplete. Set repo, branch, docsPath, and entrypoint in docs-sources.yml, then rebuild.`);
   }
 
