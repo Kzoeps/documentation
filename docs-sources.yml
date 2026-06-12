@@ -10,6 +10,6 @@ sources:
   - id: hyperindex-test
     title: Hyperindex test source
     repo: hypercerts-org/hyperindex
-    branch: main
+    branch: skills-update
     docsPath: docs
     routeBase: /tools/hyperindex
