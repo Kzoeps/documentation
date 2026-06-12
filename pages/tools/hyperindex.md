@@ -1,7 +1,14 @@
 ---
 title: Hyperindex
 description: A Go ATProto indexer that indexes hypercert records and exposes them via GraphQL.
+externalDoc: hyperindex-test
 ---
+
+{% remote-doc source="hyperindex-test" %}
+
+# Hyperindex docs unavailable
+
+The canonical Hyperindex docs could not be loaded from GitHub or the build-time raw cache. Showing the local fallback below.
 
 # Hyperindex
 
@@ -333,3 +340,5 @@ docker compose up --build
 - [GitHub repository](https://github.com/gainforest/hyperindex) — upstream GainForest repository that the Certified indexer is forked from
 - [Certified Services](/reference/certified-services#indexers) — current public indexer endpoints
 - [Building on Hypercerts](/getting-started/building-on-hypercerts) — integration patterns for platforms and tools
+
+{% /remote-doc %}
