@@ -1,0 +1,6 @@
+sources:
+  - id: hyperindex-test
+    title: Hyperindex test source
+    rawUrl: https://raw.githubusercontent.com/gainforest/hyperindex/skills-update/docs/hyperindex.md
+    sourceUrl: https://github.com/gainforest/hyperindex/blob/skills-update/docs/hyperindex.md
+    routeBase: /tools/hyperindex

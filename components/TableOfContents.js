@@ -8,31 +8,44 @@ export function TableOfContents() {
   const router = useRouter();
   const currentPath = router.asPath.split("#")[0].split("?")[0];
 
-  // Extract H2 and H3 headings from the DOM after render
+  // Extract H2 and H3 headings from the DOM after render and after runtime docs load.
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return undefined;
     const article = document.querySelector(".layout-content article");
     if (!article) {
       setHeadings([]);
-      return;
+      return undefined;
     }
 
-    const elements = article.querySelectorAll("h2, h3");
-    const items = Array.from(elements).map((el) => {
-      if (!el.id) {
-        el.id = el.textContent
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, "");
-      }
-      return {
-        id: el.id,
-        text: el.textContent,
-        level: el.tagName === "H3" ? 3 : 2,
-      };
-    });
-    setHeadings(items);
-    setActiveId("");
+    const collectHeadings = () => {
+      const elements = article.querySelectorAll("h2, h3, h4");
+      const items = Array.from(elements).map((el) => {
+        if (!el.id) {
+          el.id = el.textContent
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "");
+        }
+        return {
+          id: el.id,
+          text: el.textContent,
+          level: Number(el.tagName.slice(1)),
+        };
+      });
+      setHeadings(items);
+      setActiveId("");
+    };
+
+    collectHeadings();
+
+    const observer = new MutationObserver(collectHeadings);
+    observer.observe(article, { childList: true, subtree: true });
+    window.addEventListener("remote-docs:loaded", collectHeadings);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("remote-docs:loaded", collectHeadings);
+    };
   }, [currentPath]);
 
   // Scroll spy using scroll position
@@ -94,8 +107,8 @@ export function TableOfContents() {
             <a
               href={`#${id}`}
               className={`toc-link${level === 3 ? " toc-link-h3" : ""}${
-                activeId === id ? " toc-link-active" : ""
-              }`}
+                level === 4 ? " toc-link-h4" : ""
+              }${activeId === id ? " toc-link-active" : ""}`}
               onClick={(e) => {
                 e.preventDefault();
                 const target = document.getElementById(id);
