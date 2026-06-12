@@ -11,5 +11,5 @@ sources:
     title: Hyperindex test source
     repo: hypercerts-org/hyperindex
     branch: skills-update
-    docsPath: docs
+    docsPath: docs/hyperindex.md
     routeBase: /tools/hyperindex
