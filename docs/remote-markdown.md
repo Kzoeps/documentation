@@ -8,10 +8,8 @@ Register the source once in `docs-sources.yml`:
 sources:
   - id: epds
     title: ePDS
-    repo: hypercerts-org/ePDS
-    branch: main
-    docsPath: docs
-    entrypoint: tutorial.md
+    rawUrl: https://raw.githubusercontent.com/hypercerts-org/ePDS/main/docs/tutorial.md
+    sourceUrl: https://github.com/hypercerts-org/ePDS/blob/main/docs/tutorial.md
     routeBase: /architecture/epds
 ```
 
@@ -45,7 +43,7 @@ A short unavailable-state fallback goes here. Keep it brief so the documentation
 
 ## Scheduled refresh and deploys
 
-`npm run docs:fingerprint` reads `docs-sources.yml`, fetches GitHub tree metadata for each registered `docsPath`, and writes `public/docs-fingerprint.json` during the static build. The generated file includes a stable `combinedFingerprint`; timestamps are ignored by the comparison script.
+`npm run docs:fingerprint` reads `docs-sources.yml`, fetches each registered `rawUrl`, hashes the content, and writes `public/docs-fingerprint.json` during the static build. Directory-style sources without `rawUrl` can still use `repo`, `branch`, and `docsPath` to fingerprint GitHub tree metadata. The generated file includes a stable `combinedFingerprint`; timestamps are ignored by the comparison script.
 
 `.github/workflows/docs-refresh.yml` runs hourly and through `workflow_dispatch`:
 
@@ -74,5 +72,5 @@ Optional GitHub Actions secret:
 
 - Sources must be in approved GitHub owners: `hypercerts-org` or `gainforest`.
 - Registry ids must be lowercase, for example `epds` or `certified-group-service`.
-- A source needs `entrypoint` when `docsPath` points at a directory and a page renders it through `{% remote-doc %}`.
+- Prefer explicit `rawUrl` and `sourceUrl` values for page-level remote docs. A source only needs `entrypoint` when `docsPath` points at a directory and a page renders it through `{% remote-doc %}`.
 - The current page renderer is browser-runtime fetching, not server-side rendering.
