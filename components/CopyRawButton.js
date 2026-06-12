@@ -1,30 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
-
-const EXTERNAL_DOCS_MANIFEST_URL = '/external-docs.json';
+import externalDocsContent from '../lib/external-docs-content.json';
 
 function getGeneratedRawUrl(currentPath) {
   if (currentPath === '/') return '/raw/index.md';
   return `/raw${currentPath}.md`;
 }
 
-async function getExternalDocRawUrl(externalDoc, signal) {
-  const response = await fetch(EXTERNAL_DOCS_MANIFEST_URL, {
-    cache: 'no-store',
-    signal,
-  });
-
-  if (!response.ok) {
-    throw new Error(`Could not load ${EXTERNAL_DOCS_MANIFEST_URL}. Run npm run generate:external-docs before starting the docs site.`);
-  }
-
-  const manifest = await response.json();
-  const rawUrl = manifest?.sources?.[externalDoc]?.rawUrl;
-  if (!rawUrl) {
-    throw new Error(`External docs source "${externalDoc}" does not define a raw Markdown URL.`);
-  }
-
-  return rawUrl;
+function getExternalDocRawUrl(externalDoc) {
+  const entryId = externalDocsContent.sources?.[externalDoc];
+  return entryId ? externalDocsContent.entries?.[entryId]?.rawUrl : null;
 }
 
 /**
@@ -35,25 +20,11 @@ export function CopyRawButton({ frontmatter }) {
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
   const [isCopying, setIsCopying] = useState(false);
-  const [externalRawUrl, setExternalRawUrl] = useState(null);
   const router = useRouter();
   const currentPath = router.asPath.split('#')[0].split('?')[0] || '/';
   const generatedRawUrl = getGeneratedRawUrl(currentPath);
+  const externalRawUrl = frontmatter?.externalDoc ? getExternalDocRawUrl(frontmatter.externalDoc) : null;
   const rawUrl = frontmatter?.rawUrl || externalRawUrl || generatedRawUrl;
-
-  useEffect(() => {
-    if (!frontmatter?.externalDoc || frontmatter?.rawUrl) {
-      setExternalRawUrl(null);
-      return undefined;
-    }
-
-    const controller = new AbortController();
-    getExternalDocRawUrl(frontmatter.externalDoc, controller.signal)
-      .then(setExternalRawUrl)
-      .catch(() => setExternalRawUrl(null));
-
-    return () => controller.abort();
-  }, [frontmatter?.externalDoc, frontmatter?.rawUrl]);
 
   const handleCopy = async () => {
     setIsCopying(true);

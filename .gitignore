@@ -12,4 +12,5 @@ public/search-index.json
 public/sitemap.xml
 current-docs-fingerprint.json
 deployed-docs-fingerprint.json
+lib/external-docs-content.json
 lib/lastUpdated.json

@@ -31,11 +31,11 @@ A short unavailable-state fallback goes here. Keep it brief so the documentation
 ## How it works
 
 - The site remains a static Next.js export.
-- `npm run generate:external-docs` reads `docs-sources.yml` and writes `/external-docs.json` for browser components.
-- The browser resolves `{% remote-doc source="epds" %}` through `/external-docs.json`, then fetches the source file from `raw.githubusercontent.com` at runtime first.
-- If the live GitHub fetch fails, the browser falls back to the build-time copy in `/raw`.
+- `npm run generate:external-docs` reads `docs-sources.yml`, fetches registered raw Markdown, writes `/external-docs.json`, and writes build-time content to `lib/external-docs-content.json`.
+- `{% remote-doc source="epds" %}` resolves against that generated build-time content during `next build`.
+- The exported page contains the rendered remote Markdown HTML; the browser does not fetch GitHub to display the docs.
 - Build-time search and raw-page generation use `externalDoc` frontmatter, so search and `/raw` use the canonical Markdown instead of the local fallback.
-- The fetched Markdown is parsed with the same Markdoc tags and nodes used by local pages.
+- The generated Markdown is parsed with the same Markdoc tags and nodes used by local pages.
 - Fenced `mermaid` diagrams render as SVGs in the browser through the Mermaid npm package.
 - Relative links in the remote Markdown point back to the source GitHub repository.
 - `Copy raw` and `View raw` use the page's registered `externalDoc` source when it is set.
@@ -73,4 +73,4 @@ Optional GitHub Actions secret:
 - Sources must be in approved GitHub owners: `hypercerts-org` or `gainforest`.
 - Registry ids must be lowercase, for example `epds` or `certified-group-service`.
 - Prefer explicit `rawUrl` and `sourceUrl` values for page-level remote docs. A source only needs `entrypoint` when `docsPath` points at a directory and a page renders it through `{% remote-doc %}`.
-- The current page renderer is browser-runtime fetching, not server-side rendering.
+- Registry-backed remote docs render during the static build. If generated build-time content is missing, the page shows the wrapped local fallback.
